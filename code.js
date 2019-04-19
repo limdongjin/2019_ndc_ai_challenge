@@ -2,9 +2,6 @@ function think(hp, mp, you_hp, you_mp, history, old_games) {
   var o = old_games
   var h = history
 
-  // mp가 3 이상이면 방어적으로 플레이
-  if(mp >= 3) return attack_or_block();
-
   // 첫 판
   if(o.length === 0){
      return first_game_action(hp, mp, you_hp, you_mp, history);
@@ -156,9 +153,20 @@ function prob_action(o, h, hp, you_hp, mp, you_mp){
     }
   }
 
+  if(mp >= 3){
+    if(predict_you_act === 'charge') return 'attack';
+    if(mp >= 7) return "attack";
+    if(predict_you_act === 'attack' && you_mp > mp + 3 && hp - you_mp - 1> 0) return "attack";
+    if(predict_you_act === 'attack' && you_mp <= 1 && you_hp < hp - 1) return "block";
+    if(predict_you_act === 'attack' && you_mp >= mp && you_hp >= 3*mp) return 'block';
+
+    return attack_or_block();
+  }
+
   if(mp >= 2 && you_hp <= 5 && predict_you_act !== 'attack') return 'attack';
   if(you_hp <= 3*mp && predict_you_act === 'block') return 'attack';
 
+  if(predict_you_act === 'block' && you_hp <= mp) return 'attack';
   if(predict_you_act === 'charge' && h.length > 45) return 'attack';
   if(predict_you_act === 'charge' && you_hp <= mp + 1) return 'attack';
   if(predict_you_act === 'charge' && you_mp < 1 && you_hp >= 5) return 'charge';
@@ -176,7 +184,9 @@ function greedy_case_action(history,hp, mp, you_hp, you_mp) {
   if(mp >= you_hp) return 'attack';
 
   // ko는 아니지만 막판에 상대피를 깎을수있는 경우
-  if(hp - you_mp - 1 >= you_hp - mp && history.length >= 48) return 'attack'
+  if(hp - you_mp - 1 >= you_hp - mp && history.length >= 48) return 'attack';
+
+  if(hp <= 5 && you_hp <= 5 && mp >= 2 && you_mp < 2) return 'attack';
 
   return false;
 }
