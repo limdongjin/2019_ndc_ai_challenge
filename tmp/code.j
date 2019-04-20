@@ -289,9 +289,5 @@ function calculate_hpmpy_status(s, my_act, you_act) {
       'block': {hp: s.hp, mp: s.mp, you_hp: s.you_hp, you_mp: s.you_mp}
     }
   };
-  var new_status = d[my_act][you_act];
-  if(new_status.mp < 0) new_status.mp = 0;
-  if(new_status.you_mp < 0) new_status.you_mp = 0;
-
-  return new_status;
+  return d[my_act][you_act];
 }

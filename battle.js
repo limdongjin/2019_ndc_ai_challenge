@@ -1,10 +1,109 @@
+battle();
+
+function battle() {
+  var oldgames_for_f_ai = [];
+  var oldgames_for_p_ai = [];
+
+  var score_for_final_ai = 0;
+  var score_for_prev_ai = 0;
+  var win_cnt_for_final_ai = 0;
+  var win_cnt_for_prev_ai = 0;
+  var i, k=0;
+  console.log("He;;");
+  for(i = 0; i < 10; i++){
+    console.log((i + 1)+" Game");
+
+    var history_f_ai = [];
+    var history_p_ai = [];
+
+    let status = {f_hp: 25, f_mp: 0, p_hp: 25, p_mp: 0};
+    for(var j = 0; j < 50; j ++) {
+      var new_status, tmp;
+      var win_flag = 0;
+      console.log("  "+ (j+1)+" Round");
+      if (win_cnt_for_final_ai === 6) {
+        // finish game and final ai is win
+        win_flag = 1;
+        console.log("Final AI is Win!");
+      }
+      if (win_cnt_for_prev_ai === 6) {
+        // finish game and final ai is win
+        win_flag = 1;
+        console.log("Last AI is Win!");
+      }
+      const action_f = think(status.f_hp, status.f_mp, status.p_hp, status.p_mp, history_f_ai, oldgames_for_f_ai);
+      const action_p = random_ai(status.p_hp, status.p_mp, status.f_hp, status.f_mp, history_p_ai, oldgames_for_p_ai);
+      const ss = {hp: status.f_hp,
+        mp: status.f_mp, you_hp: status.p_hp, you_mp: status.p_mp};
+
+      tmp = calculate_hpmpy_status(ss, action_f, action_p, 0);
+      new_status = {f_hp: tmp.hp, f_mp: tmp.mp, p_hp: tmp.you_hp,p_mp: tmp.you_mp};
+
+      var s = status_change_string(status, new_status)
+      console.log(s);
+
+      history_f_ai.push([action_f, action_p]);
+      history_p_ai.push([action_p, action_f]);
+      console.log("f_ai: " + action_f + " p_ai: " + action_p);
+      if(new_status.f_hp <= 0){
+        console.log("P_AI is Win!");
+        break;
+      }else if(new_status.p_hp <= 0){
+        console.log("F_AI is Win!");
+        break;
+      }
+      status = new_status;
+    }
+    oldgames_for_f_ai.push(history_f_ai);
+    oldgames_for_p_ai.push(history_p_ai);
+  }
+
+}
+
+function random_ai(hp, mp, you_hp, you_mp, history, oldgames) {
+  var r = Math.floor(Math.random()*3);
+  var d = {0: "attack", 1: "block", 2: "charge"};
+
+  return d[r];
+}
+
+function status_change_string(status, new_status) {
+  var printed_status_changed = "";
+  printed_status_changed += "f_hp: ";
+  if(status.f_hp !== new_status.f_hp)
+    printed_status_changed += status.f_hp + " -> " + new_status.f_hp;
+  else
+    printed_status_changed += status.f_hp;
+
+  printed_status_changed += " f_mp: ";
+  if(status.f_mp !== new_status.f_mp)
+    printed_status_changed += status.f_mp + " -> " + new_status.f_mp;
+  else
+    printed_status_changed += status.f_mp;
+  printed_status_changed += " p_hp: ";
+  if(status.p_hp !== new_status.p_hp)
+    printed_status_changed += status.p_hp + " -> " + new_status.p_hp;
+  else
+    printed_status_changed += status.p_hp
+  printed_status_changed += " p_mp: ";
+  if(status.p_mp !== new_status.p_mp)
+    printed_status_changed += status.p_mp + " -> " + new_status.p_mp;
+  else
+    printed_status_changed += status.p_mp;
+
+  return printed_status_changed;
+}
+
+//
+// 최종 버전 ai
+//
 function think(hp, mp, you_hp, you_mp, history, old_games) {
   var o = old_games
   var h = history
 
   // 첫 판
   if(o.length === 0){
-     return first_game_action(hp, mp, you_hp, you_mp, history);
+    return first_game_action(hp, mp, you_hp, you_mp, history);
   }
 
   // 1-2 라운드
@@ -271,7 +370,8 @@ function predict_by_you_mp(o, h, you_mp){
   return [predict_you_act, 'mid'];
 }
 
-function calculate_hpmpy_status(s, my_act, you_act) {
+function calculate_hpmpy_status(s, my_act, you_act, round) {
+  console.log(my_act, you_act);
   let d = {
     'charge': {
       'charge':  { hp: s.hp, mp: s.mp + 1, you_hp: s.you_hp, you_mp: s.you_mp + 1},
@@ -292,6 +392,7 @@ function calculate_hpmpy_status(s, my_act, you_act) {
   var new_status = d[my_act][you_act];
   if(new_status.mp < 0) new_status.mp = 0;
   if(new_status.you_mp < 0) new_status.you_mp = 0;
-
+  console.log(s);
+  console.log(d[my_act][you_act]);
   return new_status;
 }
