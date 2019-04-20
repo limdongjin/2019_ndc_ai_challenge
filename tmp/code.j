@@ -279,7 +279,7 @@ function calculate_hpmpy_status(s, my_act, you_act) {
       'block':   { hp: s.hp, mp: s.mp + 1, you_hp: s.you_hp, you_mp: s.you_mp }
     },
     'attack': {
-      'charge': {hp: s.hp, mp: s.mp - 1, you_hp: s.you_hp - s.mp - 1, you_mp: s.you_mp - 1},
+      'charge': {hp: s.hp, mp: s.mp - 1, you_hp: s.you_hp - s.mp - 1, you_mp: 0},
       'attack': {hp: s.hp - s.you_mp - 1, mp: 0, you_hp: s.you_hp - s.mp - 1, you_mp: 0},
       'block': {hp: s.hp, mp: s.mp - 1, you_hp: s.you_hp - s.mp, you_mp: s.you_mp + 1}
     },
@@ -289,5 +289,11 @@ function calculate_hpmpy_status(s, my_act, you_act) {
       'block': {hp: s.hp, mp: s.mp, you_hp: s.you_hp, you_mp: s.you_mp}
     }
   };
-  return d[my_act][you_act];
+  var new_status = d[my_act][you_act];
+
+  // mp 는 음수가 될수없음.
+  if(new_status.mp < 0) new_status.mp = 0;
+  if(new_status.you_mp < 0) new_status.you_mp = 0;
+
+  return new_status;
 }
