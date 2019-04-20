@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7996ae65-c7d7-4881-8114-93984f345b9e" name="Default Changelist" comment="" />
+    <list default="true" id="7996ae65-c7d7-4881-8114-93984f345b9e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/battle.js" beforeDir="false" afterPath="$PROJECT_DIR$/battle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code.js" beforeDir="false" afterPath="$PROJECT_DIR$/code.js" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -13,21 +18,29 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/code.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="293" column="59" lean-forward="true" selection-start-line="293" selection-start-column="59" selection-end-line="293" selection-end-column="59" />
+            <state relative-caret-position="140">
+              <caret line="11" column="22" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
+              <folding>
+                <element signature="n#!!block;n#calculate_hpmpy_status#0" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/battle.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="398" lean-forward="true" selection-start-line="398" selection-end-line="398" />
+            <state relative-caret-position="213">
+              <caret line="694" column="22" lean-forward="true" selection-start-line="694" selection-start-column="22" selection-end-line="694" selection-end-column="22" />
               <folding>
+                <element signature="e#13#8889#0" />
+                <element signature="e#10908#20014#0" />
+                <element signature="n#!!block;n#f#0" />
+                <element signature="n#!!block;n#f#0" />
+                <element signature="n#!!block;n#f#0" />
                 <element signature="n#!!block;n#calculate_hpmpy_status#0" />
               </folding>
             </state>
@@ -37,8 +50,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tmp/code.j">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5355">
-              <caret line="153" column="3" lean-forward="true" selection-start-line="153" selection-start-column="3" selection-end-line="153" selection-end-column="3" />
+            <state relative-caret-position="5487">
+              <caret line="291" column="35" selection-start-line="291" selection-start-column="35" selection-end-line="291" selection-end-column="35" />
             </state>
           </provider>
         </entry>
@@ -49,14 +62,20 @@
     <findStrings>
       <find>random</find>
       <find>console.log</find>
+      <find>calc</find>
+      <find>prob_action</find>
+      <find>console</find>
     </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
+        <option value="$PROJECT_DIR$/code.js" />
         <option value="$PROJECT_DIR$/tmp/code.j" />
         <option value="$PROJECT_DIR$/battle.js" />
-        <option value="$PROJECT_DIR$/code.js" />
       </list>
     </option>
   </component>
@@ -64,6 +83,7 @@
     <option name="width" value="1440" />
     <option name="height" value="900" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -75,6 +95,11 @@
             <path>
               <item name="aiai" type="b2602c69:ProjectViewProjectNode" />
               <item name="aiai" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="aiai" type="b2602c69:ProjectViewProjectNode" />
+              <item name="aiai" type="462c0819:PsiDirectoryNode" />
+              <item name="tmp" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -129,23 +154,23 @@
       <updated>1555595482695</updated>
       <workItem from="1555595485851" duration="9976000" />
       <workItem from="1555681458055" duration="9552000" />
-      <workItem from="1555692100879" duration="8894000" />
+      <workItem from="1555692100879" duration="14587000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="28422000" />
+    <option name="totallyTimeSpent" value="34115000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.12679084" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.12679084" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3296837" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3296837" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39902675" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -168,39 +193,15 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/battle.js</url>
-          <line>38</line>
+          <line>710</line>
           <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/battle.js</url>
-          <line>39</line>
+          <line>711</line>
           <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/battle.js</url>
-          <line>373</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/battle.js</url>
-          <line>374</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/battle.js</url>
-          <line>376</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/battle.js</url>
-          <line>396</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -208,25 +209,33 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/tmp/code.j">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5355">
-          <caret line="153" column="3" lean-forward="true" selection-start-line="153" selection-start-column="3" selection-end-line="153" selection-end-column="3" />
+        <state relative-caret-position="5487">
+          <caret line="291" column="35" selection-start-line="291" selection-start-column="35" selection-end-line="291" selection-end-column="35" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/battle.js">
+    <entry file="file://$PROJECT_DIR$/code.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="398" lean-forward="true" selection-start-line="398" selection-end-line="398" />
+        <state relative-caret-position="140">
+          <caret line="11" column="22" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
           <folding>
             <element signature="n#!!block;n#calculate_hpmpy_status#0" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/code.js">
+    <entry file="file://$PROJECT_DIR$/battle.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="293" column="59" lean-forward="true" selection-start-line="293" selection-start-column="59" selection-end-line="293" selection-end-column="59" />
+        <state relative-caret-position="213">
+          <caret line="694" column="22" lean-forward="true" selection-start-line="694" selection-start-column="22" selection-end-line="694" selection-end-column="22" />
+          <folding>
+            <element signature="e#13#8889#0" />
+            <element signature="e#10908#20014#0" />
+            <element signature="n#!!block;n#f#0" />
+            <element signature="n#!!block;n#f#0" />
+            <element signature="n#!!block;n#f#0" />
+            <element signature="n#!!block;n#calculate_hpmpy_status#0" />
+          </folding>
         </state>
       </provider>
     </entry>
