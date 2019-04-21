@@ -401,7 +401,7 @@ var final = {
     if (greedy_case !== false) {
       return greedy_case;
     }
-
+    // if(mp === 3) return "attack" // 테스트용
     // 확률적 결정
     return this.prob_action(o, h, hp, you_hp, mp, you_mp);
   }
@@ -540,7 +540,7 @@ var final = {
     if (mp >= 3) {
       if (predict_you_act === 'charge') return 'attack';
       if (mp >= 7) return "attack";
-      // if(mp - you_mp >= 4) return 'attack';
+      if(mp - you_mp >= 4) return 'attack';
       if (predict_you_act === 'attack' && you_mp > mp + 3 && hp - you_mp - 1 > 0) return "attack";
       if (predict_you_act === 'attack' && you_mp <= 1 && you_hp < hp - 1) return "block";
       if (predict_you_act === 'attack' && you_mp >= mp && you_hp >= 3 * mp) return 'block';
@@ -701,21 +701,21 @@ function battle() {
   console.log("He;;");
   var win_cnt_for_final_ai = 0;
   var win_cnt_for_prev_ai = 0;
-  for(i = 0; i < 1000; i++){
+  for(i = 0; i < 10000; i++){
     // console.log((i + 1)+" Game");
 
     var history_f_ai = [];
     var history_p_ai = [];
 
     let status = {f_hp: 25, f_mp: 0, p_hp: 25, p_mp: 0};
-    for(var j = 0; j < 300; j ++) {
+    for(var j = 0; j < 50; j ++) {
       var new_status, tmp;
 
       // console.log("  "+ (j+1)+" Round");
 
       const action_f = think(status.f_hp, status.f_mp, status.p_hp, status.p_mp, history_f_ai, oldgames_for_f_ai);
-      const action_p = random_ai(status.p_hp, status.p_mp, status.f_hp, status.f_mp, history_p_ai, oldgames_for_p_ai);
-      // const action_p = final.think(status.p_hp, status.p_mp, status.f_hp, status.f_mp, history_p_ai, oldgames_for_p_ai);
+      // const action_p = random_ai(status.p_hp, status.p_mp, status.f_hp, status.f_mp, history_p_ai, oldgames_for_p_ai);
+      const action_p = final.think(status.p_hp, status.p_mp, status.f_hp, status.f_mp, history_p_ai, oldgames_for_p_ai);
 
       const ss = {hp: status.f_hp,
         mp: status.f_mp, you_hp: status.p_hp, you_mp: status.p_mp};
