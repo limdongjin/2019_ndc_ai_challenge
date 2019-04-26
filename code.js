@@ -16,11 +16,13 @@ function think(hp, mp, you_hp, you_mp, history, old_games) {
   // 상대의 액션을 예측하여 카운터 액션을 함.
   return optimal_action(o, h, hp, you_hp, mp, you_mp);
 }
-
 function first_second_round(h, o, hp, mp, you_hp, you_mp) {
+  if(mp >= 7) return "attack";
   var d = {'attack': 1, 'charge': 1, 'block': 1};
   var i;
   var current_round = h.length;
+  let accuracy = "low";
+  let predict_you_act;
 
   for(i = 0; i < o.length; i++){
     var oh = o[i];
@@ -29,52 +31,66 @@ function first_second_round(h, o, hp, mp, you_hp, you_mp) {
 
   let num = weighted_random_3(d['attack'], d['charge'], d['block']);
   const num_to_action = {0: "attack", 1: "charge", 2: "block"};
-  let predict_you_act = num_to_action[num];
+  predict_you_act = num_to_action[num];
+  let d_sum = d["attack"]+d["block"]+d["charge"];
 
-  if(mp >= 7) return "attack";
-  if(mp >= 2 && you_hp <= 5 && predict_you_act !== 'attack') return 'attack';
+  if(d_sum - 2 === d["attack"]){accuracy = "high";predict_you_act ="attack"}
+  if(d_sum - 2 === d["charge"]){accuracy = "high";predict_you_act ="charge"}
+  if(d_sum - 2 === d["block"]){accuracy = "high";predict_you_act ="block"}
 
   if(predict_you_act === "attack")
-    return counter_action_for_attack(hp, mp, you_hp, you_mp);
+    return counter_action_for_attack(hp, mp, you_hp, you_mp, accuracy, h.length);
 
   if(predict_you_act === "charge")
-    return counter_action_for_charge(hp, mp, you_hp, you_mp);
+    return counter_action_for_charge(hp, mp, you_hp, you_mp, accuracy);
 
   if(predict_you_act === "block")
-    return counter_action_for_block(hp, mp, you_hp, you_mp, o.length);
+    return counter_action_for_block(hp, mp, you_hp, you_mp, h.length, accuracy);
 
   return "attack"; // 이 return 은 실행되지 않음.
 }
+
 // 첫 게임일때
 function first_game_action(hp, mp, you_hp, you_mp, history) {
   if(history.length === 0) return 'attack';
-  if(history.length === 1) return rand_action();
-
-  var prev_my_act = history[history.length - 1][0];
-  var prev_y_act = history[history.length - 1][1];
-  var d = {'attack': 1, 'charge': 1, 'block': 1}
-  var i;
-
-  for(i=1;i<history.length;i++){
-    if(history[i-1][0] === prev_my_act && history[i-1][1] === prev_y_act)
-      d[history[i][1]] += 1
+  if(history.length === 1) {
+    if(mp > 1) return "attack";
+    return rand_action();
   }
 
-  let num = weighted_random_3(d['attack'], d['charge'], d['block']);
-  const num_to_action = {0: "attack", 1: "charge", 2: "block"};
-  let predict_you_act = num_to_action[num];
+  let predict_you_act;
+  let accuracy = "low";
+  let predict_prev_table;
+
+  if(history.length !== 0) {
+    predict_prev_table = predict_by_prev_act([], history);
+    predict_you_act = predict_prev_table[0];
+  }
+
+  let predict_mp_table = predict_by_you_mp([history], history, you_mp);
+
+
+  if(predict_prev_table[1] === "high") {
+    predict_you_act = predict_prev_table[0];
+    accuracy = "high"
+  }
+  // mp 로 예측 된 결과가 더 우선 순위를 갖는다.
+  if(predict_mp_table[1] === "high") {
+    predict_you_act = predict_mp_table[0];
+    accuracy = "high"
+  }
 
   if(mp >= 7) return "attack";
   if(mp >= 2 && you_hp <= 5 && predict_you_act !== 'attack') return 'attack';
 
   if(predict_you_act === "attack")
-    return counter_action_for_attack(hp, mp, you_hp, you_mp);
+    return counter_action_for_attack(hp, mp, you_hp, you_mp, accuracy, history.length);
 
   if(predict_you_act === "charge")
-    return counter_action_for_charge(hp, mp, you_hp, you_mp);
+    return counter_action_for_charge(hp, mp, you_hp, you_mp, accuracy);
 
   if(predict_you_act === "block")
-    return counter_action_for_block(hp, mp, you_hp, you_mp, 1);
+    return counter_action_for_block(hp, mp, you_hp, you_mp, history.length, accuracy);
 
   return "attack"; // 이 return 은 실행되지 않음.
 }
@@ -130,25 +146,72 @@ function predict_by_prev_act(old_games, history) {
   const prev_my_act = history[history.length - 1][0];
   const prev_you_act = history[history.length - 1][1];
   const num_to_action = {0: "attack", 1: "charge", 2: "block"};
-
+  let accuracy = "low";
   const d = prev_act_count_table(old_games, history, prev_my_act, prev_you_act);
-  const action_number = weighted_random_3(d["action"], d["charge"], d["block"]);
+  const action_number = weighted_random_3(d["attack"], d["charge"], d["block"]);
+  const d_sum = d["attack"] + d["charge"] + d["block"];
 
-  return num_to_action[action_number];
+  if(d_sum <= 20 && d_sum > 7){
+    if(d_sum === d["attack"] + 2){
+      accuracy = "high";
+      return ["attack", "high"];
+    }else if(d_sum === d["block"] + 2){
+      accuracy = "high";
+      return ["block", "high"]
+    }else if(d_sum === d["charge"] + 2){
+      accuracy = "high";
+      return ["charge", "high"]
+    }
+  }else if(d_sum > 20){
+    let d_sum_3_4 = (d_sum / 2 + d_sum / 4);
+    if(d["attack"] >= d_sum_3_4){
+      accuracy = "high";
+      return ["attack", "high"];
+    }else if(d["block"] >= d_sum_3_4){
+      accuracy = "high";
+      return ["block", "high"]
+    }else if(d["charge"] >= (d_sum / 2 + d_sum / 4)){
+      accuracy = "high";
+      return ["charge", "high"]
+    }
+  }
+
+  return [num_to_action[action_number], accuracy];
 }
-function counter_action_for_charge(hp, mp, you_hp, you_mp){
+function counter_action_for_charge(hp, mp, you_hp, you_mp, accuracy){
+  const is_mp_much_bigger_than_you_mp = ((you_mp + 3 <= mp) || (you_mp === 0 && mp >= 3));
+  if(accuracy === "high"){
+    if(mp <= 2 && you_mp === 0 && you_mp - mp < hp && hp > 7) return "charge";
+    return "attack";
+  }
+
+  if(is_mp_much_bigger_than_you_mp){
+    if(you_hp < 5) return "attack";
+    if(you_hp - mp - 1 <= 0) return "attack";
+
+    let d = {0: "attack", 1: "block"};
+    let num = weighted_random_2(30, 70);
+    return d[num];
+  }
   return "attack";
 }
-function counter_action_for_block(hp, mp, you_hp, you_mp, old_games_length) {
-  if(mp >= 3){
-    // 예측이 실패 했을 가능성이 존재하므로 mp가 높을때는 charge 를 하지않음.
-    return attack_or_block();
+function counter_action_for_block(hp, mp, you_hp, you_mp, history_length, accuracy) {
+  if(accuracy === "high"){
+    if(mp >= 3 && you_mp === 0) return "attack";
+    if(you_hp <= 5 && mp !== 0 && hp > 10 && you_mp < 2) return "attack"
+    if(you_mp*3 < mp) return "attack";
+    if(history_length > 45 && mp - you_mp >= 3) return "attack";
+    if(history_length > 45 && you_hp <= 5 && mp !== 0) return "attack";
+
+    return "charge";
   }
+  if(you_hp <= 5 && mp !== 0 && hp > 10) return "attack"
   if(you_hp <= 3*mp) return 'attack';
-  let weight = {charge: 90, block: 10};
-  if(old_games_length === 1){
-    weight.charge = 70; weight.block = 20;
-  }
+  if(mp >= 3 && you_mp === 0) return "attack";
+  if(history_length > 45 && mp - you_mp >= 3) return "attack";
+  if(history_length > 45 && you_hp <= 5 && mp !== 0) return "attack";
+  let weight = {charge: 70, block: 30};
+
   return block_or_charge(weight.block, weight.charge);
 }
 function block_or_charge(block_weight, charge_weight) {
@@ -157,52 +220,64 @@ function block_or_charge(block_weight, charge_weight) {
 
   return d[num];
 }
-function counter_action_for_attack(hp, mp, you_hp, you_mp) {
-  const is_you_mp_much_bigger_than_mp = ((you_mp >= mp + 3) || (mp === 0 && you_mp >= 3));
-  const is_mp_much_bigger_than_mp = ((you_mp <= mp + 3) || (you_mp === 0 && mp >= 3));
+function counter_action_for_attack(hp, mp, you_hp, you_mp, accuracy, history_length) {
+  if(mp >= 6) return "attack";
+  const is_you_mp_much_bigger_than_mp = ((you_mp >= mp + 3));
   const is_not_ko_with_attack_attack_case =  (hp - you_mp - 1 > 0);
   const d = {0: "attack", 1: "block"};
   let num;
 
   // ko 시킬수 있는 경우
   if(you_ko_condition(mp, you_hp, 1)) return "attack";
+  // if(is_not_ko_with_attack_attack_case === false) return "block";
 
+  // attack 이 매우 유리한 경우
   if(is_you_mp_much_bigger_than_mp &&
-    is_not_ko_with_attack_attack_case) { // attack 이 매우 유리한 경우
-    return "attack";
-  }
+     is_not_ko_with_attack_attack_case &&
+     is_not_ko_with_attack_attack_case
+  ) return "attack";
 
-  if(you_mp <= 1 && you_hp < hp - 1) return "block";
-  if(you_mp >= mp && you_hp >= 3*mp) return 'block';
-
-  if(mp >= 3) return attack_or_block();
+  if(you_hp <= 5 && mp !== 0 && hp > 10 && you_mp < 2) return "attack"
+  if(hp - you_mp <= 0) return "attack";
+  if(history_length > 45 && mp - you_mp >= 3) return "attack";
+  if(history_length > 45 && you_hp <= 5 && mp !== 0) return "attack";
 
   return "block";
 }
 function optimal_action(o, h, hp, you_hp, mp, you_mp){
-  if(mp >= 7 && hp - you_mp - 1 > 0) return "attack";
+  if(mp >= 7 && hp - you_mp - 1 > 0 && mp - you_mp >= 4) return "attack";
 
-  let predict_you_act = predict_by_prev_act(o, h);
+  // let predict_you_act = predict_by_prev_act(o, h);
+  let predict_you_act;
+  let accuracy = "low";
+  let predict_prev_table;
 
-  if(o.length >= 1){
-    var predict_table = predict_by_you_mp(o, h, you_mp);
-    var you_act_for_mp = predict_table[0];
-    var level = predict_table[1];
-    if(level === 'high'){
-      predict_you_act = you_act_for_mp;
-    }
+  predict_prev_table = predict_by_prev_act(o, h);
+  predict_you_act = predict_prev_table[0];
+
+  o.push(h);
+  let predict_mp_table = predict_by_you_mp(o, h, you_mp);
+
+  if(predict_prev_table[1] === "high") {
+    predict_you_act = predict_prev_table[0];
+    accuracy = "high"
+  }
+  // mp 로 예측 된 결과가 더 우선 순위를 갖는다.
+  if(predict_mp_table[1] === "high") {
+    predict_you_act = predict_mp_table[0];
+    accuracy = "high"
   }
 
   if(mp >= 2 && you_hp <= 5 && predict_you_act !== 'attack') return 'attack';
 
   if(predict_you_act === "attack")
-    return counter_action_for_attack(hp, mp, you_hp, you_mp);
+    return counter_action_for_attack(hp, mp, you_hp, you_mp, accuracy, h.length);
 
   if(predict_you_act === "charge")
-    return counter_action_for_charge(hp, mp, you_hp, you_mp);
+    return counter_action_for_charge(hp, mp, you_hp, you_mp, accuracy);
 
   if(predict_you_act === "block")
-    return counter_action_for_block(hp, mp, you_hp, you_mp, 0);
+    return counter_action_for_block(hp, mp, you_hp, you_mp, h.length, accuracy);
 
   return "attack"; // 이 return 은 실행되지 않음.
 }
@@ -252,13 +327,12 @@ function predict_by_you_mp(o, h, you_mp){
     }
   }
 
-
   let num = weighted_random_3(d['attack'], d['charge'], d['block']);
   const num_to_action = {0: 'attack', 1:'charge', 2:'block'};
 
   let predict_you_act = num_to_action[num];
 
-  var d_sum = d['attack']+d['block']+d['charge'];
+  let d_sum = d['attack']+d['block']+d['charge'];
   if(d_sum >= 7 && d_sum < 20){
     if(d['attack'] === d_sum - 2){ // block, charge 를 한번도 안낸 경우
       return ['attack', 'high']
@@ -281,7 +355,6 @@ function predict_by_you_mp(o, h, you_mp){
       return ['charge', 'high']
     }
   }
-
   if(d_sum >= 35){
     if(d['attack'] >= d_sum / 2 + d_sum / 4){ // block, charge 를 attack 에 비해 비교적 적게 낸경우
       return ['attack', 'high']
@@ -294,7 +367,7 @@ function predict_by_you_mp(o, h, you_mp){
     }
   }
 
-  return [predict_you_act, 'mid'];
+  return [predict_you_act, 'low'];
 }
 function calculate_hpmpy_status(s, my_act, you_act) {
   let d = {
