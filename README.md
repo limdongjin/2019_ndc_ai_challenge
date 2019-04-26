@@ -20,7 +20,7 @@ block이 예측되어도 you_mp*3 < mp 라는 조건에 의해서 attack을 하�
 
 상대방의 mp가 1 정도인데 나의 mp가 4 정도라면, 상대방이 block 하고있더라고 데미지를 입히는게 더 합리적이라고 판단함.
 
-하지만, you_mp가 0인 경우에는 mp가 1이어도 attack을 하게 되어서 손해를 보는것임...
+하지만 미처 생각치 못한 부분은 you_mp가 0일때 나의 mp가 1이어도 attack을 하게 되어서 손해를 보는것이다.....ㅜㅜ
 
 ```js
 // code.js : counter_action_for_block : Line 202
