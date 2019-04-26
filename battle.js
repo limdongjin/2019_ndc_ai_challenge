@@ -1,3 +1,5 @@
+// AI 테스트를 위한 배틀 코드 
+
 const prev = {
   think(hp, mp, you_hp, you_mp, history, old_games) {
     var o = old_games
